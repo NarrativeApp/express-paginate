@@ -70,7 +70,7 @@ exports.getArrayPages = function(req) {
     if (limit > 0) {
       var end = Math.min(Math.max(currentPage + Math.floor(limit / 2), limit), pageCount);
       var start = Math.max(1, (currentPage < (limit - 1)) ? 1 : (end - limit) + 1);
-			
+
       var pages = [];
       for (var i = start; i <= end; i++) {
         pages.push({
@@ -92,6 +92,12 @@ exports.middleware = function middleware(limit, maxLimit) {
   var _maxLimit = (typeof maxLimit === 'number') ? parseInt(maxLimit, 10) : 50;
 
   return function _middleware(req, res, next) {
+
+    if (req.cookies.query) {
+      if (req.cookies.query.limit) {
+        _limit = req.cookies.query.limit;
+      }
+    }
 
     req.query.page = (typeof req.query.page === 'string') ? parseInt(req.query.page, 10) || 1 : 1;
 
